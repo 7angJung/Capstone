@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[31]:
 
 
 # OCR 모델
@@ -16,9 +16,13 @@ get_ipython().system('pip install matplotlib')
 get_ipython().system('pip install opencv-python-headless')
 # clone
 get_ipython().system('git clone https://github.com/ultralytics/yolov5')
+# spellchecker 설치
+get_ipython().system('pip install pyspellchecker')
+# wordninja 설치
+get_ipython().system('pip install wordninja')
 
 
-# In[2]:
+# In[1]:
 
 
 import torch
@@ -27,6 +31,9 @@ import easyocr
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+import sys
+from spellchecker import SpellChecker
+import wordninja
 
 def detect_objects(image_path):
     """
@@ -95,7 +102,7 @@ def crop_book(image_path, left_half_path='C:\\Users\\peter\\capstone\\onePage\\l
         print("탐지된 'book'이 없습니다.")
         return False  # 'book'이 탐지되지 않음
 
-def text_detection(left_img_path='C:\\Users\\peter\\capstone\\onePage\\left_half.jpg', right_ig_path='C:\\Users\\peter\\capstone\\onePage\\right_half.jpg'):
+def text_detection(left_img_path='C:\\Users\\peter\\capstone\\onePage\\left_half.jpg', right_img_path='C:\\Users\\peter\\capstone\\onePage\\right_half.jpg'):
     # easyocr Reader 생성 (한국어와 영어 인식을 위해 'ko'와 'en' 설정)
     reader = easyocr.Reader(['ko', 'en'], gpu=False)
 
@@ -132,6 +139,39 @@ def text_detection(left_img_path='C:\\Users\\peter\\capstone\\onePage\\left_half
 
     # 인식된 텍스트 리스트를 반환
     return recognized_texts
+"""
+def text_correction(texts):
+    # wordninja를 통해 띄어쓰기 처리
+    words = wordninja.split(texts)
+    
+    # SpellChecker 객체 생성
+    spell = SpellChecker()
+    
+    # 각 단어의 철자 교정
+    corrected_words = [spell.correction(word) for word in words]
+    
+    # 교정된 단어들을 하나의 문자열로 결합
+    corrected_text = ' '.join(corrected_words)
+    
+    return corrected_text
+"""
+def text_correction(texts):
+    # wordninja와 SpellChecker를 이용한 띄어쓰기 및 철자 교정 함수
+    def correct_text(text):
+        words = wordninja.split(text)
+        spell = SpellChecker()
+        corrected_words = [spell.correction(word) for word in words]
+        return ' '.join(corrected_words)
+
+    # 입력 데이터가 리스트인 경우
+    if isinstance(texts, list):
+        corrected_texts = [correct_text(text) for text in texts]
+        return corrected_texts
+    # 입력 데이터가 문자열인 경우
+    elif isinstance(texts, str):
+        return correct_text(texts)
+    else:
+        raise ValueError("입력 데이터는 문자열 또는 리스트여야 합니다.")
 
 
 # In[ ]:
