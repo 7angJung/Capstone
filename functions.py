@@ -18,7 +18,7 @@ get_ipython().system('pip install opencv-python-headless')
 get_ipython().system('git clone https://github.com/ultralytics/yolov5')
 
 
-# In[ ]:
+# In[2]:
 
 
 import torch
@@ -50,7 +50,7 @@ def detect_objects(image_path):
     # 결과 이미지 보여주기
     results.show()
 
-def crop_book(image_path, left_half_path='C:/Users/peter/capstone/onePage/left_half.jpg', right_half_path='C:/Users/peter/capstone/onePage/right_half.jpg'):
+def crop_book(image_path, left_half_path='C:\\Users\\peter\\capstone\\onePage\\left_half.jpg', right_half_path='C:\\Users\\peter\\capstone\\onePage\\right_half.jpg'):
     """
     이미지에서 'book' 객체를 탐지하고 가장 높은 신뢰도를 가진 'book' 객체의 이미지를 가로로 반으로 나누어 저장합니다.
 
@@ -95,7 +95,7 @@ def crop_book(image_path, left_half_path='C:/Users/peter/capstone/onePage/left_h
         print("탐지된 'book'이 없습니다.")
         return False  # 'book'이 탐지되지 않음
 
-def text_detection(left_img_path, right_img_path):
+def text_detection(left_img_path='C:\\Users\\peter\\capstone\\onePage\\left_half.jpg', right_ig_path='C:\\Users\\peter\\capstone\\onePage\\right_half.jpg'):
     # easyocr Reader 생성 (한국어와 영어 인식을 위해 'ko'와 'en' 설정)
     reader = easyocr.Reader(['ko', 'en'], gpu=False)
 
@@ -127,14 +127,15 @@ def text_detection(left_img_path, right_img_path):
         plt.show()
 
     # 왼쪽 및 오른쪽 이미지에 대해 텍스트 인식 및 바운드 박스 그리기 수행
-    recognize_text_and_draw_bbox(left_img, 'C:/Users/peter/capstone/onePage/left_half.jpg', "Left Page with Bounding Boxes")
-    recognize_text_and_draw_bbox(right_img, 'C:/Users/peter/capstone/onePage/right_half.jpg', "Right Page with Bounding Boxes")
+    recognize_text_and_draw_bbox(left_img, 'C:\\Users\\peter\\capstone\\onePage\\left_half.jpg', "Left Page with Bounding Boxes")
+    recognize_text_and_draw_bbox(right_img, 'C:\\Users\\peter\\capstone\\onePage\\right_half.jpg', "Right Page with Bounding Boxes")
 
-    # 인식된 텍스트 리스트 출력
-    print("인식된 텍스트들:")
+    # 인식된 텍스트 리스트를 반환
+    return recognized_texts
 
-    print(''.join(map(str, recognized_texts)))
-    
-    #for text in recognized_texts:
-    #    print(text, end="")
+
+# In[ ]:
+
+
+
 
