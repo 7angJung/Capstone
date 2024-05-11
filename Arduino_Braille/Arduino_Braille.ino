@@ -1,3 +1,4 @@
+
 int buttonPin1 = 2;  // 버튼 1 연결 핀
 int buttonPin2 = 3;  // 버튼 2 연결 핀
 int buttonPin3 = 4;  // 버튼 3 연결 핀
