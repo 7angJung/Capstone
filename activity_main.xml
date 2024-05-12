@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+<androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorPressedHighlight"
+        android:elevation="4dp"
+        app:title="점자 도우미"
+        app:titleTextColor="@android:color/white" />
+
+
+    <Button
+        android:id="@+id/button_camera"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#F0445CD8"
+        android:text="카메라 켜기" />
+
+    <Button
+        android:id="@+id/button_convert_to_braille"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/button_camera"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#A47BBD3F"
+        android:text="점자 변환" />
+
+</RelativeLayout>
