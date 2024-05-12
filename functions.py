@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[31]:
+# In[5]:
 
 
 # OCR 모델
@@ -22,7 +22,7 @@ get_ipython().system('pip install pyspellchecker')
 get_ipython().system('pip install wordninja')
 
 
-# In[1]:
+# In[7]:
 
 
 import torch
