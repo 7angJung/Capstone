@@ -22,7 +22,7 @@ get_ipython().system('pip install pyspellchecker')
 get_ipython().system('pip install wordninja')
 
 
-# In[7]:
+# In[2]:
 
 
 import torch
@@ -172,10 +172,4 @@ def text_correction(texts):
         return correct_text(texts)
     else:
         raise ValueError("입력 데이터는 문자열 또는 리스트여야 합니다.")
-
-
-# In[ ]:
-
-
-
 
