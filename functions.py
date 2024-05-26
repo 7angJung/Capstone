@@ -8,7 +8,7 @@
 get_ipython().system('pip install easyocr')
 # 이미지 영상 처리
 get_ipython().system('pip install opencv-python')
-# PyTorch와 torchvision 설치
+# PyTorch와 torchvision, torchaudio 설치
 get_ipython().system('pip install torch torchvision torchaudio')
 # matplotlib 설치
 get_ipython().system('pip install matplotlib')
@@ -29,7 +29,6 @@ import torch
 import cv2
 import easyocr
 import matplotlib.pyplot as plt
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import sys
 from spellchecker import SpellChecker
