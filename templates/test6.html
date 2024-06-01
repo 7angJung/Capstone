@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>웹캠 스트리밍 및 아두이노 제어</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        #webcam_stream, #labelled_image {
+            width: 50vw; /* 뷰포트 너비의 50% */
+            height: auto; /* 높이를 자동으로 조정하여 비율을 유지 */
+        }
+        
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>웹캠 스트리밍</th>
+            <th>라벨링 이미지</th>
+        </tr>
+        <tr>
+            <td rowspan="5">
+                <img id="webcam_stream" src="" alt="웹캠 스트리밍 화면" />
+              </td>
+              <td rowspan="5">
+                <img id="labelled_image" src="" alt="준비중..." />
+              </td>
+        </tr>
+        <!-- 빈 행들 -->
+        <tr></tr><tr></tr><tr></tr><tr></tr>
+        <tr>
+            <th>아두이노로부터 받은 문자</th>
+            <th>아두이노로 보낼 문자</th>
+        </tr>
+        <tr>
+            <td><div id="received_message">여기에 메시지가 표시됩니다.</div></td>
+            <td><div id="message_to_send">여기에 아두이노로 보내는 메시지가 표시됩니다.</div></td>
+        </tr>
+    </table>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 웹캠 스트리밍 이미지 업데이트
+            function updateWebcamImage() {
+                document.getElementById('webcam_stream').src = '/video' + '?rand=' + Math.random();
+            }
+            setInterval(updateWebcamImage, 100); // 100ms 마다 이미지 업데이트
+
+            // 라벨링된 이미지 업데이트
+            function updateLabelledImage() {
+                fetch('/labelled_image')
+                    .then(response => response.blob()) // 이미지 데이터를 blob으로 받음
+                    .then(blob => {
+                        // blob 객체를 이용해 이미지 URL 생성
+                        const imageUrl = URL.createObjectURL(blob);
+                        document.getElementById('labelled_image').src = imageUrl;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            setInterval(updateLabelledImage, 5000); // 5초 마다 라벨링된 이미지 업데이트
+
+            // 아두이노로부터 받은 메시지를 표시하기
+            function displayMessage() {
+                fetch('/arduino_received_message')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('received_message').innerText = data.message;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            setInterval(displayMessage, 1000); // 1초 마다 메시지 업데이트
+
+            // 아두이노로 보내는 메시지를 화면에 표시하기 (실제로는 전송하지 않음)
+            function displaySendMessage() {
+                fetch('/send_to_arduino')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('message_to_send').innerText = data.message; // 화면에 표시할 메시지
+                        console.log('Display Message:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+            setInterval(displaySendMessage, 1000); // 1초 마다 화면에 메시지 표시
+        });
+    </script>    
+</body>
+</html>

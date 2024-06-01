@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>웹캠 스트리밍</title>
+    <script>
+        function fetchLogs() {
+            fetch('/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logContainer = document.getElementById('log-container');
+                    logContainer.innerHTML = '';
+                    data.forEach(log => {
+                        const logElement = document.createElement('p');
+                        logElement.textContent = log;
+                        logContainer.appendChild(logElement);
+                    });
+                });
+        }
+
+        setInterval(fetchLogs, 1000);  // 1초마다 로그 업데이트
+    </script>
+</head>
+<body>
+    <h1>웹캠 스트리밍 화면</h1>
+    <div style="display: flex;">
+        <div>
+            <img src="{{ url_for('video') }}" width="640" height="480">
+        </div>
+        <div>
+            {% if captured_image_path %}
+                <h2>촬영된 이미지</h2>
+                <img src="{{ captured_image_path }}" width="320" height="240">
+            {% endif %}
+        </div>
+    </div>
+    <div id="log-container" style="margin-top: 20px;">
+        <h2>로그 메시지</h2>
+    </div>
+</body>
+</html>

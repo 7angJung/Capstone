@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 점자 변환 시스템</title>
+    <style>
+        body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 3fr 1fr; /* 1행을 2행보다 크게 설정 */
+            gap: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            font-weight: bold;
+            text-align: center;
+        }
+        .content {
+            text-align: center;
+        }
+        .webcam, .labeled-image {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">웹캠 스트리밍 화면</div>
+    <div class="title">라벨링된 이미지</div>
+
+    <div class="content" style="grid-row: 1; grid-column: 1;">
+        <!-- 웹캠 스트리밍 URL을 Flask에서 제공하는 URL로 직접 설정 -->
+        <img id="webcam-stream" class="webcam" src="{{ url_for('video') }}">
+    </div>
+    <div class="content" style="grid-row: 1; grid-column: 2;">
+        <!-- 초기 이미지 메시지 설정 -->
+        <img id="labeled-image" class="labeled-image" src="" alt="이미지 준비중">
+    </div>
+
+    <div class="title">아두이노로부터 받은 문자열</div>
+    <div class="title">아두이노로 전송할 문자열</div>
+
+    <div class="content" style="grid-row: 2; grid-column: 1;" id="arduino-input-value"></div>
+    <div class="content" style="grid-row: 2; grid-column: 2;" id="arduino-output-word"></div>
+
+    <script>
+        // JavaScript 코드 부분을 여기에 추가할 수 있습니다.
+    </script>
+</body>
+</html>
