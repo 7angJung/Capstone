@@ -74,6 +74,7 @@ def crop_image(image_path):
             right_half = cropped.crop((width/2, 0, width, height))
             
             # 나눠진 이미지 파일 경로 설정
+            cropped_image_path = ""
             left_half_path = f"{base_path}{img_filename}_left.jpg"
             right_half_path = f"{base_path}{img_filename}_right.jpg"
             
@@ -87,4 +88,10 @@ def crop_image(image_path):
     else:
         print("\n탐지된 'book'이 없습니다.")
         return None, None, None  # 'book'이 탐지되지 않음
+
+
+# In[ ]:
+
+
+
 

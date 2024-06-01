@@ -25,6 +25,7 @@ def taking_picture(camera):
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         img_path = f"C:\\Users\\peter\\capstone\\camera\\{timestamp}.jpg"
         cv2.imwrite(img_path, frame)
+        print("이미지 촬영이 완료되었습니다.")
         print(f"\n이미지 경로 : {img_path}\n")
     return img_path
 
