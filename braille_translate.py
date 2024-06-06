@@ -7,7 +7,7 @@
 get_ipython().system('pip install jamo')
 
 
-# In[195]:
+# In[17]:
 
 
 from unicode import join_jamos
@@ -27,7 +27,8 @@ def text_to_braille(text_list):
         
         # 기본 부호  
         '.': '02', ',': '26', '?': '63', '!': '62', '“': '63', '”': '36',
-        "‘": '0363', "’": '3630', '-': '33', '(': '6330', ')': '0336',
+        '‘': '0363', '’': '3630', '-': '33', '(': '6330', ')': '0336',
+        '/': '0731', "\\": '360127', '@':'0110'
     }
     hangul_initials = {
         # 한글 점자 초성 
@@ -75,10 +76,25 @@ def text_to_braille(text_list):
         '그러나': '1011', '그러면': '1022', '그래서': '1061', '그런데': '1054',
         '그러므로': '1023', '그리고': '1053', '그리하여': '1016'
     }
+    
     # 텍스트가 영어인지 확인
     def is_english(text):
         return all('A' <= char <= 'Z' or 'a' <= char <= 'z' for char in text)
 
+    # 텍스트가 한글인지 확인인
+    def is_hangul(text):
+        for char in text:
+            # 완성형 한글 검사
+            if '\uAC00' <= char <= '\uD7A3':
+                continue
+            # 한글 자모 검사
+            elif '\u1100' <= char <= '\u11FF' or '\uA960' <= char <= '\uA97F' or '\uD7B0' <= char <= '\uD7FF' or '\u3130' <= char <= '\u318F':
+                continue
+            else:
+                return False
+        return True
+
+    
     # 약자 변환
     def convert_abbreviation(chosung_char, jungsung_char, jongsung_char):
         combined = ''
@@ -143,7 +159,7 @@ def text_to_braille(text_list):
                 braille_text = '36' + ''.join([convert_char_to_braille(char) for char in text]) + '26'
             elif text.isdigit():
                 braille_text = '37' + ''.join([convert_char_to_braille(char) for char in text])
-            else:
+            elif is_hangul(text):
                 for char in text:
                     if char in hangul_abbreviations_syllable:
                         braille_text += hangul_abbreviations_syllable.get(char, '')
@@ -155,6 +171,28 @@ def text_to_braille(text_list):
                         jungsung_char = jamo_chars[1]  # 중성
                         jongsung_char = jamo_chars[2] if len(jamo_chars) > 2 else ''  # 종성 (없을 수도 있음)
                         braille_text += convert_abbreviation(chosung_char, jungsung_char, jongsung_char)
+            else:
+                for char in text:
+                    if is_hangul(char):
+                        if char in hangul_abbreviations_syllable:
+                            braille_text += hangul_abbreviations_syllable.get(char, '')
+                            continue
+                        else:
+                            jamo_chars = j2hcj(h2j(char))
+                            # 분리된 자모를 각각의 변수에 저장
+                            chosung_char = jamo_chars[0]  # 초성
+                            jungsung_char = jamo_chars[1]  # 중성
+                            jongsung_char = jamo_chars[2] if len(jamo_chars) > 2 else ''  # 종성 (없을 수도 있음)
+                            braille_text += convert_abbreviation(chosung_char, jungsung_char, jongsung_char)
+                            braille_text += hangul_abbreviations_syllable.get(char, '')
+                            continue
+                    elif is_english(char):
+                        braille_text += '36' + convert_char_to_braille(char) + '26'
+                    elif char.isdigit():
+                        braille_text += '37' + convert_char_to_braille(char)
+                    else:
+                        braille_text += convert_char_to_braille(char)
+                
         braille_texts.append(braille_text)
 
     print("점자 변환이 완료됐습니다.")
