@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 점자 변환 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fdf0cc; /* Light yellow background */
+        }
+        .responsive-image {
+            width: 100%; /* 전체 너비에 맞춤 */
+            height: auto; /* 비율에 맞게 높이 조정 */
+            object-fit: contain; /* 내용이 잘리지 않도록 조정 */
+            border-radius: 0.5rem; /* 모서리 둥글게 */
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-10">실시간 점자 변환 시스템</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center transition-transform transform hover:scale-105">
+                <h2 class="text-lg font-semibold mb-4 text-center">웹캠 스트리밍</h2>
+                <img id="webcam_stream" class="responsive-image bg-gray-200" alt="웹캠 스트리밍 화면" />
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center transition-transform transform hover:scale-105">
+                <h2 class="text-lg font-semibold mb-4 text-center">라벨링 이미지</h2>
+                <img id="labelled_image" class="responsive-image bg-gray-200" alt="준비중..." />
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col">
+                <h2 class="text-lg font-semibold mb-4 text-center">현재 상황 및 알림</h2>
+                <div id="current_status" class="h-20 bg-gray-200 rounded flex items-center justify-center">여기에 현재 상황 및 알림이 표시됩니다.</div>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col">
+                <h2 class="text-lg font-semibold mb-4 text-center">입력 버튼</h2>
+                <div id="received_message" class="h-20 bg-gray-200 rounded flex items-center justify-center">여기에 입력한 버튼이 표시됩니다.</div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col">
+                <h2 class="text-lg font-semibold mb-4 text-center">점자로 출력한 단어</h2>
+                <div id="message_to_send" class="h-20 bg-gray-200 rounded flex items-center justify-center">여기에 아두이노로 보내는 단어가 표시됩니다.</div>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col">
+                <h2 class="text-lg font-semibold mb-4 text-center">출력한 단어의 점자</h2>
+                <div class="bg-gray-200 h-20 rounded flex items-center justify-center">여기에 점자가 표시됩니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUtterance = null; // 전역 음성 합성 객체
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 웹캠 스트리밍 이미지 업데이트
+            function updateWebcamImage() {
+                document.getElementById('webcam_stream').src = '/video' + '?rand=' + Math.random();
+            }
+            setInterval(updateWebcamImage, 100); // 100ms 마다 이미지 업데이트
+
+            // 라벨링된 이미지 업데이트
+            function updateLabelledImage() {
+                fetch('/labelled_image')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const imageUrl = URL.createObjectURL(blob);
+                        document.getElementById('labelled_image').src = imageUrl;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            setInterval(updateLabelledImage, 5000); // 5초 마다 라벨링된 이미지 업데이트
+
+            // 아두이노로부터 받은 메시지를 표시하기
+            function displayMessage() {
+                fetch('/arduino_received_message')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('received_message').innerText = data.message;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            setInterval(displayMessage, 1000); // 1초 마다 메시지 업데이트
+
+            // 아두이노로 보내는 메시지를 화면에 표시하기
+            function displaySendMessage() {
+                fetch('/send_to_arduino')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('message_to_send').innerText = data.message;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+            setInterval(displaySendMessage, 1000); // 1초 마다 화면에 메시지 표시
+            
+            // 알림 메시지를 화면에 표시하고 음성 출력하기
+            function displayCurrentStatus() {
+                fetch('/current_status')
+                    .then(response => response.json())
+                    .then(data => {
+                        const statusElement = document.getElementById('current_status');
+                        const newMessage = data.message;
+
+                        // 메시지가 변경되었는지 확인
+                        if (statusElement.innerText !== newMessage) {
+                            statusElement.innerText = newMessage;
+
+                            // 기존 음성 멈추기
+                            if (currentUtterance) {
+                                window.speechSynthesis.cancel(); // 모든 음성을 멈춤
+                            }
+
+                            // 새로운 음성을 생성하고 읽기
+                            currentUtterance = new SpeechSynthesisUtterance(newMessage);
+                            currentUtterance.lang = 'ko-KR'; // 한국어 설정
+                            window.speechSynthesis.speak(currentUtterance); // 음성으로 읽기
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+            setInterval(displayCurrentStatus, 1000); // 1초 마다 알림 업데이트
+        });
+    </script>
+</body>
+</html>
