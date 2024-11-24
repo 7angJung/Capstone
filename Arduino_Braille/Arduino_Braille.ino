@@ -86,6 +86,11 @@ void setAngles(String str) {
       // 나머지 서보 모터의 각도를 0으로 설정
       angles[i] = 0;
     }
+  }
+
+  // 각 서보 모터를 0.1초 간격으로 회전시키기
+  for (int i = 0; i < 18; i++) {
     servos[i].write(angles[i]); // 각도 설정
+    delay(100); // 0.1초 대기
   }
 }
