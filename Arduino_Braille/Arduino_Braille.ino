@@ -56,20 +56,20 @@ void loop() {
     delay(1000); // 디바운싱 딜레이
   }
   else if (digitalRead(buttonPin2) == LOW) {
-    Serial.println("Previous");
-    if (currentIndex > 0) {
-      currentIndex--;
-      receivedStr = receivedStrList[currentIndex % 18];
-      setAngles(receivedStr); // 이전 문자열에 따른 각도 설정
-    }
-    delay(1000); // 디바운싱 딜레이
-  }
-  else if (digitalRead(buttonPin3) == LOW) {
     Serial.println("Next");
     if (currentIndex < 17 && receivedStrList[(currentIndex + 1) % 18].length() != 0) {
       currentIndex++;
       receivedStr = receivedStrList[currentIndex % 18];
       setAngles(receivedStr); // 다음 문자열에 따른 각도 설정
+    }
+    delay(1000); // 디바운싱 딜레이
+  }
+  else if (digitalRead(buttonPin3) == LOW) {
+    Serial.println("Previous");
+    if (currentIndex > 0) {
+      currentIndex--;
+      receivedStr = receivedStrList[currentIndex % 18];
+      setAngles(receivedStr); // 이전 문자열에 따른 각도 설정
     }
     delay(1000); // 디바운싱 딜레이
   }
