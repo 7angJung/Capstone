@@ -81,7 +81,7 @@ void setAngles(String str) {
     if (i < str.length()) {
       // 문자열에서 각 문자를 숫자로 변환하고 해당하는 각도로 설정
       int index = str.charAt(i) - '0'; // 문자를 숫자로 변환
-      angles[i] = index * 25; // 0~7까지 각 숫자에 맞는 각도 설정
+      angles[i] = index * 22.5; // 0~7까지 각 숫자에 맞는 각도 설정
     } else {
       // 나머지 서보 모터의 각도를 0으로 설정
       angles[i] = 0;
