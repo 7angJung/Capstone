@@ -14,6 +14,11 @@
         h1, h2 {
             color: #716a55; /* 글꼴 색상 변경 */
         }
+        .braille-image {
+            width: 25px; /* 이미지 너비 조정 */
+            height: auto; /* 비율 유지 */
+            margin-right: 0px; /* 이미지 간 간격 */
+        }
     </style>
 </head>
 <body class="p-8">
@@ -132,24 +137,22 @@
             }
             setInterval(displayCurrentStatus, 1000); // 1초 마다 알림 업데이트
 
-
             function fetchBrailleText() {
                 fetch('/current_braille')
                     .then(response => response.json())
                     .then(data => {
-                        const brailleText = document.getElementById('braille_text');
+                        const brailleTextContainer = document.getElementById('braille_text');
+                        brailleTextContainer.innerHTML = ''; // 이전 내용을 지우기
 
-                        // 점자 텍스트 변환 로직 추가
-                        let transformedBrailleText = data.braille_text.replace(/0/g, " ") // "0" -> " "
-                            .replace(/1/g, "⠁") // "1" -> "⠁"
-                            .replace(/2/g, "⠂") // "2" -> "⠂"
-                            .replace(/3/g, "⠄") // "3" -> "⠄"
-                            .replace(/4/g, "⠃") // "4" -> "⠃"
-                            .replace(/5/g, "⠅") // "5" -> "⠅"
-                            .replace(/6/g, "⠆") // "6" -> "⠆"
-                            .replace(/7/g, "⠇"); // "7" -> "⠇"
-
-                        brailleText.innerText = transformedBrailleText; // 변환된 점자 텍스트 업데이트
+                        // 점자 이미지 표시
+                        const brailleImages = data.braille_images; // 이미지 경로 배열
+                        for (let imgSrc of brailleImages) {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = imgSrc; // 서버에서 받은 이미지 경로
+                            imgElement.alt = "점자 이미지";
+                            imgElement.classList.add('braille-image'); // 클래스 추가 (스타일링용)
+                            brailleTextContainer.appendChild(imgElement); // 이미지 추가
+                        }
                     })
                     .catch(error => console.error('Error fetching braille text:', error));
             }
