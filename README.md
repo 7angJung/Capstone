@@ -1,4 +1,4 @@
-# 점자 변환 시스템
+# 실시간 점자 변환 시스템
 
 이 프로젝트는 시각장애인을 위한 실시간 점자 변환 시스템입니다. 이 시스템은 책이나 문서의 내용을 점자로 변환하여 사용자가 읽을 수 있도록 지원합니다. 하드웨어와 소프트웨어가 결합되어 작동하며, 사용자가 쉽게 접근할 수 있는 인터페이스를 제공합니다.
 
@@ -22,4 +22,4 @@
 
 1. 프로젝트를 클론합니다.
    ```bash
-   git clone https://github.com/yourusername/yourproject.git
+   git clone https://github.com/7angJung/Capstone.git
