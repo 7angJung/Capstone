@@ -3,21 +3,13 @@
 
 ## Package
 .
-
 ├── database
-
 │   ├── user picture
-
 │   └── braille picture
-
 ├── backend
-
 │   ├── server
-
 │   └── function
-
-└── infra
-
+└── frontend
     └── templates
     
 ## Environment
