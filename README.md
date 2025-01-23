@@ -3,14 +3,17 @@
 
 ## Package
 .
-├── database
-│   ├── user picture
-│   └── braille picture
-├── backend
-│   ├── server
-│   └── function
-└── frontend
-    └── templates
+'''bash
+├─backend
+│  ├─functions
+│  └─server
+├─database
+│  ├─braille picture
+│  └─user picture
+├─frontend
+│  └─templates
+└─static
+'''
     
 ## Environment
 - **Python 3.8**
