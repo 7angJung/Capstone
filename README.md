@@ -3,14 +3,23 @@
 
 ## Package
 .
+
 ├── database
+
 │   ├── user picture
+
 │   └── braille picture
+
 ├── backend
+
 │   ├── server
+
 │   └── function
+
 └── infra
+
     └── templates
+    
 ## Environment
 - **Python 3.8**
 - **Libraries**
