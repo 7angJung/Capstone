@@ -21,6 +21,7 @@
     - flask
     - pillow
     - pyserial
+      
 ## Stack
 - **Frontend**
     - HTML
@@ -32,4 +33,6 @@
     - Webcam
     - Arduino Mega
     - Servo
+
 ## Structure
+![git_readme_image-001](https://github.com/user-attachments/assets/161b5fee-1b16-4bc1-9719-64adee64a5a5)
